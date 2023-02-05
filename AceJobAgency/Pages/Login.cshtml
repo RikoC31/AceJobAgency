@@ -1,0 +1,56 @@
+﻿@page
+@model AceJobAgency.Pages.LoginModel
+@{
+}
+@using AceJobAgency;
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Configuration
+@inject IOptions<GoogleCaptchaConfig> GoogleCaptchaConfig
+<div class="container mt-5">
+
+	<div class="row justify-content-center align-items-center">
+
+		<div class="col-sm-12 col-md-12 col-lg-4">
+			<h1 class="mb-3">Login </h1>
+
+			<form method="post">
+				<div asp-validation-summary="All" class="text-danger"></div>
+				
+				<div class="mb-3">
+					<label class="form-label" asp-for="LModel.Email">Email Address</label>
+					<input type="Text" asp-for="LModel.Email" class="form-control" />
+					<span asp-validaton-for="LModel.Email" class="text-danger"></span>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label" asp-for="LModel.Password">Password</label>
+					<input type="Text" asp-for="LModel.Password" class="form-control" />
+					<span asp-validaton-for="LModel.Password" class="text-danger"></span>
+				</div>
+
+				<div class="mb-3 form-check">
+					<input type="checkbox" asp-for="LModel.RememberMe" class="form-check-input" />
+					<label class="form-check-label" asp-for="LModel.RememberMe">Remember Me?</label>
+				</div>
+				<input asp-for="LModel.Token" id="LModel_Token" type="hidden" />
+
+				<div class="mb-3">
+					<button type="submit" class="btn btn-primary" id="btn_submit_Click">Login</button>
+				</div>
+
+			</form>
+		</div>
+	</div>
+</div>
+
+<script src="https://www.google.com/recaptcha/api.js?render=@GoogleCaptchaConfig.Value.SiteKey"></script>
+<script>
+
+	grecaptcha.ready(function () {
+		grecaptcha.execute('@GoogleCaptchaConfig.Value.SiteKey', { action: 'submit' }).then(function (token) {
+			console.log(token);
+			$('#LModel_Token').val(token);
+		});
+	});
+
+</script>
